@@ -9,31 +9,19 @@
     "lint": "next lint"
   },
   "dependencies": {
-<<<<<<< HEAD
     "@auth/prisma-adapter": "^2.7.0",
-=======
-    "@next-auth/prisma-adapter": "1.0.7",
->>>>>>> ece13cf1d48eacf84ab64acde91dbd47ba9ac8eb
     "@prisma/client": "5.20.0",
     "bcryptjs": "2.4.3",
     "groq-sdk": "0.7.0",
     "next": "14.2.13",
-<<<<<<< HEAD
     "next-auth": "^5.0.0-beta.22",
-=======
-    "next-auth": "^4.24.8",
->>>>>>> ece13cf1d48eacf84ab64acde91dbd47ba9ac8eb
     "nodemailer": "6.9.15",
     "prisma": "5.20.0",
     "react": "^18",
     "react-dom": "^18",
     "react-icons": "5.3.0",
-<<<<<<< HEAD
     "react-papaparse": "4.4.0",
     "uuid": "^10.0.0"
-=======
-    "react-papaparse": "4.4.0"
->>>>>>> ece13cf1d48eacf84ab64acde91dbd47ba9ac8eb
   },
   "devDependencies": {
     "@types/bcryptjs": "2.4.6",
