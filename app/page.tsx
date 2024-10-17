@@ -9,8 +9,15 @@ export default function Home() {
       <div className="invisible md:visible ">
         <PlaneAnimation />
       </div>
-      <Greet />
-      <main className="flex-grow flex justify-center items-center">
+      <div
+        style={{
+          animationName: "blink",
+          animationDuration: "1s",
+        }}
+      >
+        <Greet />
+      </div>
+      <main className="flex-grow flex justify-center items-center ">
         <div className=" rounded-3xl w-full max-w-4xl p-6 z-10">
           <EmailForm />
         </div>

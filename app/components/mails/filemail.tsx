@@ -150,7 +150,13 @@ const FileMail = () => {
           }}
         />
       )}
-      <div className="relative z-10 overflow-hidden rounded-xl border border-gray-800 p-[1px] w-full max-w-lg">
+      <div
+        className="relative z-10 overflow-hidden rounded-xl border border-gray-800 p-[1px] w-full max-w-lg"
+        style={{
+          animationName: "blink",
+          animationDuration: "0.8s",
+        }}
+      >
         <div className="animate-rotate absolute inset-0 h-full w-full rounded-full bg-[conic-gradient(blue_20deg,red_20deg,green_40deg,purple_60deg,transparent_120deg)] opacity-70"></div>
         <div className="relative z-20 flex flex-col h-full rounded-[0.60rem] bg-black p-10">
           <div className="flex flex-col">

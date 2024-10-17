@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     if (existingUser && existingUser.emailVerified) {
       return NextResponse.json({
         status: 200,
-        message: "Login from the login page ",
+        message: "Account Already exists ",
       });
     }
     const hashedpassword = await bcrypt.hash(password, 10);

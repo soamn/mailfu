@@ -2,11 +2,8 @@ import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
+
 import { getUserByEmail } from "./data/user";
-class CustomError extends Error {
-  code = "invalid credentials";
-  stack = "";
-}
 
 const authConfig = {
   providers: [
@@ -45,13 +42,13 @@ const authConfig = {
           !credentials.email ||
           !credentials.password
         ) {
-          throw new CustomError();
+          return null;
         }
 
         const existingUser = await getUserByEmail(credentials.email);
 
         if (!existingUser || !existingUser.password) {
-          throw new CustomError();
+          return null;
         }
 
         const isValid = await bcrypt.compare(
@@ -60,7 +57,7 @@ const authConfig = {
         );
 
         if (!isValid) {
-          throw new CustomError();
+          return null;
         }
 
         // Ensure the user's email is verified
@@ -94,7 +91,6 @@ const authConfig = {
 
   pages: {
     signIn: "/auth/signin",
-    error: "/error",
   },
   secret: process.env.NEXTAUTH_SECRET,
 };

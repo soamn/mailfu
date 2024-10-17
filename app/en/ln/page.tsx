@@ -9,9 +9,30 @@ const Landing: React.FC = () => {
   return (
     <div className="min-h-screen bg-black text-white ">
       <Header />
-      <Hero />
-      <Features />
-      <Pricing />
+      <div
+        style={{
+          animationName: "blink",
+          animationDuration: "1.5s",
+        }}
+      >
+        <Hero />
+      </div>
+      <div
+        style={{
+          animationName: "blink",
+          animationDuration: "1.5s",
+        }}
+      >
+        <Features />
+      </div>
+      <div
+        style={{
+          animationName: "blink",
+          animationDuration: "1.5s",
+        }}
+      >
+        <Pricing />
+      </div>
       <Footer />
     </div>
   );
