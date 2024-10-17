@@ -25,7 +25,6 @@ const LoginPage = () => {
   const router = useRouter();
   useEffect(() => {
     const timeout = setTimeout(() => {
-      setSending(false);
       setDialog({
         show: false,
         color: "",
@@ -61,6 +60,7 @@ const LoginPage = () => {
       redirect: false,
     });
     if (!res || res.error) {
+      setSending(false);
       setDialog({
         message: "Invalid Credentials",
         show: true,
@@ -121,7 +121,12 @@ const LoginPage = () => {
           >
             {sending ? <p>. . . .</p> : <p>Log In</p>}
           </button>
-
+          <a
+            className="text-white p-2 hover:text-blue-500"
+            href="/auth/reset-password"
+          >
+            Forgot password ?
+          </a>
           <div className="flex items-center justify-between p-4">
             <div className="w-1/3 bg-secondary h-px"></div>
             <div className="text-muted-foreground px-2 text-white">or</div>

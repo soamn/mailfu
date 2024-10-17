@@ -2,23 +2,25 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import bcrypt from "bcryptjs";
 import { sendVerificationEmail } from "@/utils/vmailer";
+import { getUserByEmail } from "@/data/user";
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
     const { name, email, password } = data;
-    const existingUser = await prisma.user.findUnique({ where: { email } });
+    const existingUser = await getUserByEmail(email);
     if (existingUser && !existingUser.emailVerified) {
-      await sendVerificationEmail(existingUser.email);
-      return NextResponse.json(
-        {
+      const vmail = await sendVerificationEmail(existingUser.email);
+      if (!vmail) {
+        return NextResponse.json({
           status: 400,
-          message:
-            "User already exists Please Login After verifying Your email , ",
-        },
-        {
-          status: 400,
-        }
-      );
+          message: "error sending Verifcation mail try again later",
+        });
+      }
+      return NextResponse.json({
+        status: 400,
+        message:
+          "User already exists Please Login After verifying Your email , ",
+      });
     }
     if (existingUser && existingUser.emailVerified) {
       return NextResponse.json({

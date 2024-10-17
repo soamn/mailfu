@@ -4,7 +4,7 @@ import prisma from "@/lib/db";
 import { v4 as uuidv4 } from "uuid";
 export async function sendVerificationEmail(email: string) {
   const token = uuidv4();
-  const expires = new Date().getTime() + 3600 + 1000 ;
+  const expires = new Date().getTime() + 24 * 60 * 60 * 1000;
   const existingToken = await getVerificationTokenByEmail(email);
 
   if (existingToken) {
@@ -38,8 +38,8 @@ export async function sendVerificationEmail(email: string) {
       subject: "Verification Mail sent from malfu",
       html: `<p>Click the link to verify your email:</p><a href=" ${verificationLink}">Link</a>`,
     });
-    console.log("Verification email sent to:", email);
-  } catch (error) {
-    console.error(error);
+    return true;
+  } catch {
+    return null;
   }
 }

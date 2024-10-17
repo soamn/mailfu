@@ -9,7 +9,6 @@ export async function getGroqChatCompletion(
   senderName: string,
   Model: string
 ) {
-  console.log(Model);
   const completion = await groq.chat.completions.create({
     messages: [
       {

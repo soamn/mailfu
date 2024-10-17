@@ -16,7 +16,6 @@ export async function sendMail(
     const refresh_token = session.user.refresh_token;
     const access_token = session.user.access_token;
     if (!refresh_token || !access_token) {
-      console.log("refresh Token expired");
       return;
     }
 
@@ -42,6 +41,6 @@ export async function sendMail(
 
     return result;
   } catch (error) {
-    console.log(error);
+    return;
   }
 }

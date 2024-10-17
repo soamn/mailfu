@@ -54,8 +54,15 @@ const RegisterForm = () => {
 
     if (!passwordRegex.test(password)) {
       setDialog({
-        message: `Password Should match the criteria
-           [a-z]   [0-9]    [@#..$]`,
+        message: `Password Should match the criteria [a-z] {@#..$%} [0-9]`,
+        show: true,
+        color: "red",
+      });
+      return;
+    }
+    if (password.length < 7) {
+      setDialog({
+        message: `Password length less than 8 characters`,
         show: true,
         color: "red",
       });
@@ -105,7 +112,9 @@ const RegisterForm = () => {
     <div>
       <div className=" text-white absolute top-0  w-full text-center mt-20 ">
         {dialog?.show ? (
-          <Popup message={dialog.message} color={dialog.color} />
+          <>
+            <Popup message={dialog.message} color={dialog.color} />
+          </>
         ) : (
           <></>
         )}
@@ -117,6 +126,7 @@ const RegisterForm = () => {
           <h2 className="text-2xl font-bold text-primary mb-4 text-center text-white ">
             Sign Up
           </h2>
+
           <form>
             <input
               onChange={(e) => {
@@ -143,6 +153,8 @@ const RegisterForm = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 type={showPassword ? "text" : "password"}
                 name="password"
+                min={8}
+                max={32}
                 value={password}
                 placeholder="Password"
                 className="p-2 input-field rounded-lg w-full"
