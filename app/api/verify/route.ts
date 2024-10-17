@@ -58,11 +58,12 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    const hasExpired = existingToken.expires > new Date().getTime();
+    const hasExpired = existingToken.expires < new Date().getTime();
 
     if (hasExpired) {
       const errorMessage = `
       <html>
+      <head>
       <head>
       <title>User Not Found</title>
       <style>
@@ -115,7 +116,6 @@ export async function GET(req: NextRequest) {
       headers: { "Content-Type": "text/html" },
     });
   } catch (error) {
-    console.error("Verification error:", error);
     const errorMessage = `
       <html>
       <head>

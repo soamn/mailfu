@@ -1,8 +1,7 @@
 "use client";
 import Image from "next/image";
 import React, { useEffect, useRef } from "react";
-import image from "@/app/assets/plane.png";
-import { SiGmail } from "react-icons/si";
+import image from "@/public/assets/plane.png";
 
 const PlaneAnimation: React.FC = () => {
   const svgRef = useRef<SVGSVGElement>(null);
