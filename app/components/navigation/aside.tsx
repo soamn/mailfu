@@ -6,7 +6,7 @@ import { GiExitDoor } from "react-icons/gi";
 const Aside = () => {
   return (
     <>
-      <div className="overflow-y-scroll h-full  border-r border-gray-900">
+      <div className="overflow-y-scroll h-full  border-r border-gray-900 ">
         <ul>
           <li>
             <a href="#">Profile</a>
