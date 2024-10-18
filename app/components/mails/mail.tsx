@@ -16,16 +16,14 @@ interface ApiResponse {
   message: string;
   status: number;
 }
+
 interface dialog {
   show: boolean;
   message: string;
   color: string;
 }
+
 const Mail = () => {
-  useEffect(() => {
-    setSenderEmail(user?.email as string);
-    setSenderName(user?.name as string);
-  });
   const { data: session, status } = useSession();
   const user = session?.user;
   const [emailInput, setEmailInput] = useState<string>("");
@@ -38,6 +36,12 @@ const Mail = () => {
   const [failedEmails, setFailedEmails] = useState<string[]>([]);
   const [showSentMails, setShowSentMails] = useState<boolean>(false);
   const [dialog, setDialog] = useState<dialog>();
+
+  useEffect(() => {
+    setSenderEmail(user?.email as string);
+    setSenderName(user?.name as string);
+  }, [user]);
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       setDialog({
@@ -64,18 +68,16 @@ const Mail = () => {
     setEmailInput(e.target.value);
   };
 
-  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>): void => {
+  const handleAddEmail = () => {
     if (emails.length > 15) {
       setDialog({
         show: true,
         color: "red",
-        message: " You can only send 15 emails at once ❗",
+        message: "You can only send 15 emails at once ❗",
       });
       return;
     }
-    if (e.key === "Enter" && emails.length < 501 && emailInput.trim() !== "") {
-      e.preventDefault();
-
+    if (emailInput.trim() !== "") {
       if (validateEmail(emailInput)) {
         setEmails([...emails, emailInput.trim()]);
         setEmailInput("");
@@ -83,9 +85,16 @@ const Mail = () => {
         setDialog({
           show: true,
           color: "yellow",
-          message: " ⚠️ Invalid Email address",
+          message: "⚠️ Invalid Email address",
         });
       }
+    }
+  };
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>): void => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleAddEmail();
     }
   };
 
@@ -99,9 +108,9 @@ const Mail = () => {
   };
 
   const handleSubmit = async () => {
-    if (emails.length == 0 || !message) {
+    if (emails.length === 0 || !message) {
       setDialog({
-        message: "⚠️Fields Empty",
+        message: "⚠️ Fields Empty",
         show: true,
         color: "yellow",
       });
@@ -112,7 +121,7 @@ const Mail = () => {
       setSenderEmail(user?.email as string);
       setSenderName(user?.name as string);
       setDialog({
-        message: "error fetching session try Logging in again",
+        message: "Error fetching session, try logging in again.",
         show: true,
         color: "red",
       });
@@ -131,7 +140,7 @@ const Mail = () => {
       const res: ApiResponse = await response.json();
       if (res.status === 200) {
         setDialog({
-          message: "✅Emails sent successfully",
+          message: "✅ Emails sent successfully",
           show: true,
           color: "green",
         });
@@ -155,13 +164,10 @@ const Mail = () => {
       setSending(false);
     }
   };
+
   return (
     <>
-      {dialog?.show ? (
-        <Popup message={dialog.message} color={dialog.color} />
-      ) : (
-        <></>
-      )}
+      {dialog?.show && <Popup message={dialog.message} color={dialog.color} />}
       {showSentMails && (
         <SentMails
           sentEmails={sentEmails}
@@ -173,21 +179,14 @@ const Mail = () => {
           }}
         />
       )}
-      <div
-        className="relative z-10 overflow-hidden rounded-xl border border-gray-800 p-[1px] w-full max-w-lg"
-        style={{
-          animationName: "blink",
-          animationDuration: "0.8s",
-        }}
-      >
-        <div className="animate-rotate absolute inset-0 h-full w-full rounded-full bg-[conic-gradient(blue_20deg,red_20deg,green_40deg,purple_60deg,transparent_120deg)] opacity-70"></div>
+      <div className="relative z-10 overflow-hidden rounded-xl border border-gray-800 p-[1px] w-full max-w-lg">
         <div className="relative z-20 flex flex-col h-full rounded-[0.60rem] bg-black p-10">
           <div>
-            <div className="flex items-center p-2 rounded-lg mb-4 ">
+            <div className="flex items-center p-2 rounded-lg mb-4">
               <span className="inline-block w-6 h-6 rounded-full bg-white mr-2">
                 📫
               </span>
-              <div className="flex-1 flex flex-wrap max-h-40 overflow-y-scroll ">
+              <div className="flex-1 flex flex-wrap max-h-40 overflow-y-scroll">
                 {emails.map((email, index) => (
                   <div
                     key={index}
@@ -195,7 +194,7 @@ const Mail = () => {
                   >
                     {email}
                     <button
-                      className="ml-2 text-gray-400 hover:text-black "
+                      className="ml-2 text-gray-400 hover:text-black"
                       onClick={() => removeEmail(index)}
                     >
                       x
@@ -208,26 +207,32 @@ const Mail = () => {
                   value={emailInput}
                   onChange={handleEmailInput}
                   onKeyDown={handleKeyDown}
-                  placeholder="Enter Recipient gmail and press Enter..."
-                  className={`bg-transparent outline-none text-white placeholder-gray-400 flex-1 p-2 rounded-lg focus:border-2 border-white${
+                  placeholder="Enter Recipient gmail"
+                  className={`bg-transparent outline-none  text-white placeholder-gray-400 flex-1 p-2 rounded-lg ${
                     sending ? "disabled select-none" : ""
                   }`}
                 />
+
+                <button
+                  className={`bg-white text-black font-bold py-1 px-1  rounded-md text-sm ml-2 transition duration-300 hover:bg-gray-200 ${
+                    sending ? "disabled bg-blue-400 opacity-30" : ""
+                  }`}
+                  onClick={handleAddEmail}
+                  disabled={sending}
+                >
+                  Add
+                </button>
               </div>
             </div>
 
-            <div className="flex items-center p-2 rounded-lg mb-4 ">
-              <span className="inline-block ">✉️</span>
-              <div className="bg-transparent outline-none w-full text-white placeholder-gray-400 disabled ">
-                {user?.email ? (
+            <div className="flex items-center p-2 rounded-lg mb-4">
+              <span className="inline-block">✉️</span>
+              <div className="bg-transparent outline-none w-full text-white placeholder-gray-400 disabled">
+                {user?.email && (
                   <div className="text-sm p-2 rounded-lg mr-2 mb-2 flex items-center justify-between">
-                    <>
-                      <p>{user.email}</p>
-                      <a href="/settings">⚙️</a>
-                    </>
+                    <p>{user.email}</p>
+                    <a href="/settings">⚙️</a>
                   </div>
-                ) : (
-                  <></>
                 )}
               </div>
             </div>
@@ -235,12 +240,10 @@ const Mail = () => {
 
           <textarea
             required
-            onChange={(e) => {
-              setMessage(e.target.value);
-            }}
-            placeholder="Enter Key points of the mail, or explain to us how you want the mail"
-            className={`w-full bg-zinc-900 p-3 rounded-lg placeholder-gray-400 h-32 resize-none scroll-m-0 ${
-              sending ? "disabled " : ""
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Enter key points of the mail, or explain to us how you want the mail"
+            className={`w-full bg-zinc-900 p-3 rounded-lg placeholder-gray-400 h-32 resize-none ${
+              sending ? "disabled" : ""
             }`}
             style={{ scrollbarWidth: "none" }}
           ></textarea>
@@ -260,4 +263,5 @@ const Mail = () => {
     </>
   );
 };
+
 export default Mail;
