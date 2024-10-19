@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import nodemailer from "nodemailer";
+import prisma from "@/lib/db";
 
 export async function sendMail(
   email: string,
@@ -13,11 +14,16 @@ export async function sendMail(
       return;
     }
 
-    const refresh_token = session.user.refresh_token;
-    const access_token = session.user.access_token;
-    if (!refresh_token || !access_token) {
+    const account = await prisma.account.findFirst({
+      where: { userId: session.user.id },
+    });
+
+    if (!account || !account.refresh_token || !account.access_token) {
       return;
     }
+
+    const refresh_token = account.refresh_token;
+    const access_token = account.access_token;
 
     const transport = nodemailer.createTransport({
       service: "gmail",
@@ -27,6 +33,7 @@ export async function sendMail(
         clientId: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         refreshToken: refresh_token as string,
+        accessToken: access_token as string,
       },
     });
 
@@ -37,10 +44,12 @@ export async function sendMail(
       text: message,
     };
 
+   
     const result = await transport.sendMail(mailOptions);
 
     return result;
   } catch (error) {
+    console.error("Error sending email:", error);
     return;
   }
 }
