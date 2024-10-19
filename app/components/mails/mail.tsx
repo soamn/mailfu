@@ -211,6 +211,7 @@ const Mail = () => {
                 ))}
 
                 <input
+                  name="emails"
                   type="email"
                   value={emailInput}
                   onChange={handleEmailInput}
@@ -238,7 +239,22 @@ const Mail = () => {
               <div className="bg-transparent outline-none w-full text-white placeholder-gray-400 disabled">
                 {user?.email && (
                   <div className="text-sm p-2 rounded-lg mr-2 mb-2 flex items-center justify-between">
-                    <p>{user.email}</p>
+                    {user.provider === "google" ? (
+                      <p>{user.email}</p>
+                    ) : (
+                      <p>
+                        Please connect A gmail{" "}
+                        <button
+                          onClick={() => {
+                            signIn("google");
+                          }}
+                          className="bg-white text-black font-bold py-1 px-1  rounded-md text-sm ml-2 transition duration-300 hover:bg-gray-200"
+                        >
+                          Connect
+                        </button>
+                      </p>
+                    )}
+
                     <a href="/settings">⚙️</a>
                   </div>
                 )}

@@ -60,7 +60,7 @@ const authConfig = {
           return null;
         }
 
-        // Ensure the user's email is verified
+       
         if (!existingUser.emailVerified) {
           await fetch(`${process.env.NEXTAUTH_URL}/api/register`, {
             method: "POST",
@@ -82,6 +82,7 @@ const authConfig = {
           name: existingUser.name,
           email: existingUser.email,
           image: existingUser.image,
+          
         };
 
         return userData;
