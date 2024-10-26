@@ -1,5 +1,7 @@
 import Groq from "groq-sdk";
 import { NextRequest, NextResponse } from "next/server";
+import { quickMailLimiter } from "@/ratelimit.config";
+import { headers } from "next/headers";
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
@@ -9,6 +11,23 @@ export async function POST(req: NextRequest) {
 
     const { senderName, senderEmail, receiverEmail, receiverName, prompt } =
       data;
+
+    
+    let forwardedIP = headers().get("x-forwarded-for");
+    let realIP = headers().get("x-real-ip");
+    if (forwardedIP) {
+      forwardedIP = forwardedIP.split(/, /)[0];
+    }
+    if (realIP) realIP = realIP.trim();
+    const ratelimit = await quickMailLimiter.limit(
+      forwardedIP || realIP || "no-ip"
+    );
+    if (!ratelimit.success) {
+      return NextResponse.json(
+        { status: 429, message: "Too many requests , please wait for a while" },
+        { status: 429 }
+      );
+    }
 
     const generatedEmail = await getGroqMessage(
       senderName,

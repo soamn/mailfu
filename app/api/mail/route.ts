@@ -1,18 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendMail } from "@/utils/mailer";
 import { getGroqChatCompletion } from "@/utils/generator";
+import { mailLimiter } from "@/ratelimit.config";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   const Models = [
     "llama-3.1-70b-versatile",
     "llama-3.2-11b-text-preview",
-
     "llama-3.2-90b-text-preview",
   ];
   try {
     const { message, senderEmail, emails, senderName } = await req.json();
     if (!message || !senderEmail || !emails || !senderName) {
       return NextResponse.json({ status: 404, message: "connection failed" });
+    }
+
+    const ratelimit = await mailLimiter.limit(senderEmail);
+    if (!ratelimit.success) {
+      return NextResponse.json(
+        { status: 429, message: "Too many requests , please wait for a while" },
+        { status: 429 }
+      );
     }
 
     const sentEmails: { email: string; subject: string; body: string }[] = [];
