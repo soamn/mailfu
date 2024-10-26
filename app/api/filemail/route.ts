@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendMail } from "@/utils/mailer";
 import { getGroqChatCompletion } from "@/utils/generator";
+import { mailLimiter } from "@/ratelimit.config";
 
 interface EmailData {
   senderEmail: string;
@@ -19,6 +20,14 @@ export async function POST(req: NextRequest) {
   try {
     const { senderEmail, senderName, message, csvdata }: EmailData =
       await req.json();
+
+    const ratelimit = await mailLimiter.limit(senderEmail);
+    if (!ratelimit.success) {
+      return NextResponse.json(
+        { status: 429, message: "Too many requests , please wait for a while" },
+        { status: 429 }
+      );
+    }
 
     const sentEmails: EmailResult[] = [];
     const failedEmails: string[] = [];

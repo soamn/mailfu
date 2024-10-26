@@ -11,6 +11,7 @@
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.0",
     "@prisma/client": "5.20.0",
+    "@unkey/ratelimit": "^0.4.5",
     "bcryptjs": "2.4.3",
     "groq-sdk": "0.7.0",
     "next": "^14.2.15",
