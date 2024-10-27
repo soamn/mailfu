@@ -1,6 +1,6 @@
 import { Ratelimit } from "@unkey/ratelimit";
 export const quickMailLimiter = new Ratelimit({
-  rootKey: "unkey_3ZaAvDKqvJk3GgFbZFMukHxM",
+  rootKey: process.env.UNKEY_ROOT_KEY,
   namespace: "mailfu",
   limit: 3,
   duration: 10000 * 60,
@@ -8,7 +8,7 @@ export const quickMailLimiter = new Ratelimit({
 });
 
 export const mailLimiter = new Ratelimit({
-  rootKey: "unkey_3ZaAvDKqvJk3GgFbZFMukHxM",
+  rootKey: process.env.UNKEY_ROOT_KEY,
   namespace: "mailfu",
   limit: 20,
   duration: 10000 * 60 * 10,
